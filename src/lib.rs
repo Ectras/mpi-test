@@ -38,9 +38,7 @@ pub fn mpi_test(attr: TokenStream, item: TokenStream) -> TokenStream {
                 .arg(full_name)
                 .arg("--")
                 .arg("--ignored")
-                .arg("--exact")
-                .arg("--")
-                .arg("--quiet");
+                .arg("--exact");
 
             let output = command.output().expect("failed to execute command");
             if !output.status.success() {
