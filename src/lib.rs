@@ -8,18 +8,22 @@
 /// assert_eq!(make_full_test_name("mycrate::foo", "my_test"), "foo::my_test");
 /// assert_eq!(make_full_test_name("mycrate::foo::bar", "my_test"), "foo::bar::my_test");
 /// ```
+#[must_use]
 pub fn make_full_test_name(module_path: &str, test_name: &str) -> String {
     if let Some(idx) = module_path.find("::") {
         // Not in the root module, remove the root name and concat test name
-        module_path[idx + 2..].to_string() + "::" + test_name
+        module_path[idx + 2..].to_owned() + "::" + test_name
     } else {
         // In the root module, only use test name
-        test_name.to_string()
+        test_name.to_owned()
     }
 }
 
 /// Runs a test using `mpirun` with `processes` processes. The test must be passed with as full
 /// name, e.g., `foo::bar::my_test`.
+/// 
+/// # Panics
+/// Panics if the mpirun command fails to run.
 pub fn run_mpi_test(test_full_name: &str, processes: usize) {
     let mut command = std::process::Command::new("mpirun");
     command
@@ -33,7 +37,7 @@ pub fn run_mpi_test(test_full_name: &str, processes: usize) {
         .arg("--ignored")
         .arg("--exact");
 
-    let output = command.status().expect("failed to execute process");
+    let output = command.status().expect("failed to execute command");
     assert!(output.success());
 }
 
