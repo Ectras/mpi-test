@@ -1,61 +1,59 @@
-/// Given the module path and name of a test function, returns the name as it is
-/// used by cargo test.
-///
-/// # Examples
-/// ```
-/// # use mpi_test::make_full_test_name;
-/// assert_eq!(make_full_test_name("mycrate", "my_test"), "my_test");
-/// assert_eq!(make_full_test_name("mycrate::foo", "my_test"), "foo::my_test");
-/// assert_eq!(make_full_test_name("mycrate::foo::bar", "my_test"), "foo::bar::my_test");
-/// ```
-#[must_use]
-pub fn make_full_test_name(module_path: &str, test_name: &str) -> String {
-    if let Some(idx) = module_path.find("::") {
-        // Not in the root module, remove the root name and concat test name
-        module_path[idx + 2..].to_owned() + "::" + test_name
-    } else {
-        // In the root module, only use test name
-        test_name.to_owned()
-    }
-}
+use proc_macro::TokenStream;
+use syn::{parse_macro_input, ItemFn, LitInt};
+use quote::{format_ident, quote};
 
-/// Runs a test using `mpirun` with `processes` processes. The test must be passed with as full
-/// name, e.g., `foo::bar::my_test`.
-/// 
-/// # Panics
-/// Panics if the mpirun command fails to run.
-pub fn run_mpi_test(test_full_name: &str, processes: usize) {
-    let mut command = std::process::Command::new("mpirun");
-    command
-        .arg("-n")
-        .arg(processes.to_string())
-        .arg("--allow-run-as-root")
-        .arg("cargo")
-        .arg("test")
-        .arg(test_full_name)
-        .arg("--")
-        .arg("--ignored")
-        .arg("--exact");
+#[proc_macro_attribute]
+pub fn mpi_test(attr: TokenStream, item: TokenStream) -> TokenStream {
+    // Parse the function
+    let processes = parse_macro_input!(attr as LitInt);
+    let item = parse_macro_input!(item as ItemFn);
+    let fn_name = &item.sig.ident;
+    let fn_internal_name = format_ident!("{}_internal", fn_name);
+    let body = &item.block;
 
-    let output = command.status().expect("failed to execute command");
-    assert!(output.success());
-}
+    // Generate the new functions
+    quote! {
+        #[test]
+        fn #fn_name() {
+            let module_path = module_path!();
+            let test_name = stringify!(#fn_internal_name);
 
-#[macro_export]
-macro_rules! mpi_test {
-    ($processes:expr, fn $name:ident $_:tt $body:block) => {
-        paste::paste! {
-            #[test]
-            fn $name() {
-                let full_path = module_path!();
-                let test_name = concat!(stringify!($name), "_internal");
-                let exact_name = $crate::make_full_test_name(full_path, test_name);
-                $crate::run_mpi_test(&exact_name, $processes);
+            // Get full test name
+            let full_name = if let Some(idx) = module_path.find("::") {
+                // Not in the root module, remove the root name and concat test name
+                module_path[idx + 2..].to_owned() + "::" + test_name
+            } else {
+                // In the root module, only use test name
+                test_name.to_owned()
+            };    
+
+            // Run the mpi command
+            let mut command = std::process::Command::new("mpirun");
+            command
+                .arg("-n")
+                .arg(stringify!(#processes))
+                .arg("--allow-run-as-root")
+                .arg("cargo")
+                .arg("test")
+                .arg(full_name)
+                .arg("--")
+                .arg("--ignored")
+                .arg("--exact")
+                .arg("--")
+                .arg("--quiet");
+
+            let output = command.output().expect("failed to execute command");
+            if !output.status.success() {
+                println!("==== mpirun stdout: ====\n{}", String::from_utf8(output.stdout).unwrap());
+                println!("==== mpirun stderr: ====\n{}", String::from_utf8(output.stderr).unwrap());
             }
-
-            #[test]
-            #[ignore]
-            fn [<$name _internal>]() $body
+            assert!(output.status.success());
         }
-    };
+
+        #[test]
+        #[ignore]
+        fn #fn_internal_name()
+            #body
+    }
+    .into()
 }
