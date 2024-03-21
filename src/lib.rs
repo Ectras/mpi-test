@@ -41,11 +41,8 @@ pub fn mpi_test(attr: TokenStream, item: TokenStream) -> TokenStream {
                 .arg("--exact");
 
             let output = command.output().expect("failed to execute command");
-            if !output.status.success() {
-                println!("==== mpirun stdout: ====\n{}", String::from_utf8(output.stdout).unwrap());
-                println!("==== mpirun stderr: ====\n{}", String::from_utf8(output.stderr).unwrap());
-            }
-            assert!(output.status.success());
+
+            assert!(output.status.success(), "{:?} returned {}\n==== mpirun stdout: ====\n{}\n==== mpirun stderr: ====\n{}\n========================", command, output.status, String::from_utf8(output.stdout).unwrap(), String::from_utf8(output.stderr).unwrap());
         }
 
         #[test]
