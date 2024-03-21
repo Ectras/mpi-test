@@ -44,8 +44,8 @@ macro_rules! mpi_test {
             fn $name() {
                 let full_path = module_path!();
                 let test_name = concat!(stringify!($name), "_internal");
-                let exact_name = $crate::mpi::testing::make_full_test_name(full_path, test_name);
-                $crate::mpi::testing::run_mpi_test(&exact_name, $processes);
+                let exact_name = $crate::make_full_test_name(full_path, test_name);
+                $crate::run_mpi_test(&exact_name, $processes);
             }
 
             #[test]
