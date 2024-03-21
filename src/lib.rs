@@ -2,7 +2,8 @@
 /// used by cargo test.
 ///
 /// # Examples
-/// ```ignore
+/// ```
+/// # use mpi_test::make_full_test_name;
 /// assert_eq!(make_full_test_name("mycrate", "my_test"), "my_test");
 /// assert_eq!(make_full_test_name("mycrate::foo", "my_test"), "foo::my_test");
 /// assert_eq!(make_full_test_name("mycrate::foo::bar", "my_test"), "foo::bar::my_test");
@@ -53,22 +54,4 @@ macro_rules! mpi_test {
             fn [<$name _internal>]() $body
         }
     };
-}
-
-#[cfg(test)]
-mod tests {
-    use super::make_full_test_name;
-
-    #[test]
-    fn test_make_test_name() {
-        assert_eq!(make_full_test_name("mycrate", "my_test"), "my_test");
-        assert_eq!(
-            make_full_test_name("mycrate::foo", "my_test"),
-            "foo::my_test"
-        );
-        assert_eq!(
-            make_full_test_name("mylongercrate::foo::bar", "my_test"),
-            "foo::bar::my_test"
-        );
-    }
 }
