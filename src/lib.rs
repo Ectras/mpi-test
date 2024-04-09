@@ -9,12 +9,13 @@ pub fn mpi_test(attr: TokenStream, item: TokenStream) -> TokenStream {
     let item = parse_macro_input!(item as ItemFn);
     let fn_name = &item.sig.ident;
     let fn_internal_name = format_ident!("{}_internal", fn_name);
+    let fn_wrapper_name = fn_name;
     let body = &item.block;
 
     // Generate the new functions
     quote! {
         #[test]
-        fn #fn_name() {
+        fn #fn_wrapper_name() {
             let module_path = module_path!();
             let test_name = stringify!(#fn_internal_name);
 
@@ -41,7 +42,6 @@ pub fn mpi_test(attr: TokenStream, item: TokenStream) -> TokenStream {
                 .arg("--exact");
 
             let output = command.output().expect("failed to execute command");
-
             assert!(output.status.success(), "{:?} returned {}\n==== mpirun stdout: ====\n{}\n==== mpirun stderr: ====\n{}\n========================", command, output.status, String::from_utf8(output.stdout).unwrap(), String::from_utf8(output.stderr).unwrap());
         }
 
