@@ -29,7 +29,7 @@ pub fn mpi_test(attr: TokenStream, item: TokenStream) -> TokenStream {
             };    
 
             // Run the mpi command
-            let mut command = std::process::Command::new("mpirun");
+            let mut command = std::process::Command::new("mpiexec");
             command
                 .arg("-n")
                 .arg(stringify!(#processes))
@@ -42,7 +42,7 @@ pub fn mpi_test(attr: TokenStream, item: TokenStream) -> TokenStream {
                 .arg("--exact");
 
             let output = command.output().expect("failed to execute command");
-            assert!(output.status.success(), "{:?} returned {}\n==== mpirun stdout: ====\n{}\n==== mpirun stderr: ====\n{}\n========================", command, output.status, String::from_utf8(output.stdout).unwrap(), String::from_utf8(output.stderr).unwrap());
+            assert!(output.status.success(), "{:?} returned {}\n==== mpiexec stdout: ====\n{}\n==== mpiexec stderr: ====\n{}\n========================", command, output.status, String::from_utf8(output.stdout).unwrap(), String::from_utf8(output.stderr).unwrap());
         }
 
         #[test]
