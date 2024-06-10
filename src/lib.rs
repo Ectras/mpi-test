@@ -33,7 +33,6 @@ pub fn mpi_test(attr: TokenStream, item: TokenStream) -> TokenStream {
             command
                 .arg("-n")
                 .arg(stringify!(#processes))
-                .arg("--allow-run-as-root")
                 .arg("cargo")
                 .arg("test")
                 .arg(full_name)
