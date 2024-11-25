@@ -45,7 +45,7 @@ pub fn mpi_test(attr: TokenStream, item: TokenStream) -> TokenStream {
         }
 
         #[test]
-        #[ignore]
+        #[ignore = "used by mpi_test"]
         fn #fn_internal_name()
             #body
     }
