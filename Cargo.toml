@@ -2,6 +2,12 @@
 name = "mpi_test"
 version = "0.1.0"
 edition = "2021"
+readme = "README.md"
+description = "A proc macro for unit-testing MPI code."
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/Ectras/mpi_test"
+keywords = ["mpi", "testing"]
+categories = ["development-tools::testing"]
 
 [lib]
 proc-macro = true
