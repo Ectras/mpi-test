@@ -22,9 +22,6 @@ fn test_simple_reduce() {
 }
 ```
 
-## Running in Docker / CI
-When running inside a Docker container, `mpiexec` might complain that it doesn't want to run as root. When using OpenMPI, set the flags `OMPI_ALLOW_RUN_AS_ROOT` and `OMPI_ALLOW_RUN_AS_ROOT_CONFIRM` to allow it.
-
 ## Contribution
 
 Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed under the terms of both the Apache License, Version 2.0 and the MIT license without any additional terms or conditions.
