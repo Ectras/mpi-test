@@ -1,6 +1,6 @@
 use proc_macro::TokenStream;
-use syn::{parse_macro_input, ItemFn, LitInt};
 use quote::{format_ident, quote};
+use syn::{parse_macro_input, ItemFn, LitInt};
 
 #[proc_macro_attribute]
 pub fn mpi_test(attr: TokenStream, item: TokenStream) -> TokenStream {
@@ -26,7 +26,7 @@ pub fn mpi_test(attr: TokenStream, item: TokenStream) -> TokenStream {
             } else {
                 // In the root module, only use test name
                 test_name.to_owned()
-            };    
+            };
 
             // Run the mpi command
             let mut command = std::process::Command::new("mpiexec");
