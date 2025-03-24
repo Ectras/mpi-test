@@ -22,6 +22,6 @@ fn test_simple_reduce() {
     } else {
         let mut result = [0];
         root_process.reduce_into_root(&buffer, &mut result, op);
-        assert_eq!(result[0], 0 + 1 + 2 + 3);
+        assert_eq!(result[0], 6);
     }
 }
