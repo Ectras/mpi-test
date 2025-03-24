@@ -2,6 +2,10 @@ use proc_macro::TokenStream;
 use quote::{format_ident, quote};
 use syn::{parse_macro_input, ItemFn, LitInt};
 
+/// Attribute macro applied to a function to turn it into an MPI unit test.
+///
+/// Currently, this makes the function an ignored test and creates a wrapper test
+/// that runs the function with `mpiexec` using the specified number of processes.
 #[proc_macro_attribute]
 pub fn mpi_test(attr: TokenStream, item: TokenStream) -> TokenStream {
     // Parse the function
