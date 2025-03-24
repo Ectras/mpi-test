@@ -1,12 +1,15 @@
 # mpi_test
 
-Provides MPI testing capabilities to Rust framework. The `mpi_test` proc macro can be used to annotate functions to be tested with MPI, replacing the usual `#[test]`. As argument, the number of processed to spawn needs to be given.
+Provides MPI testing capabilities to Rust. The `mpi_test` proc macro can be used to annotate functions to be tested with MPI, replacing the usual `#[test]`. As an argument, the number of processes to spawn needs to be given.
 
 The macro expands the tested function to two functions, one with the suffix `_internal`. Note that this internal method will show up as ignored when running `cargo test`.
 
+> [!WARNING]
+> This crate is a cheap workaround: It creates a second test that uses [std::process::Command](https://doc.rust-lang.org/std/process/struct.Command.html) to launch the test binary with `mpiexec`.
+
 ## Example
 ```rust
-use mpi::{collective::SystemOperation,traits::{Communicator, Root}};
+use mpi::{collective::SystemOperation, traits::{Communicator, Root}};
 use mpi_test::mpi_test;
 
 #[mpi_test(4)]
