@@ -226,7 +226,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "mpi_test"
+name = "mpi-test"
 version = "0.1.0"
 dependencies = [
  "mpi",

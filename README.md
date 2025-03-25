@@ -1,6 +1,6 @@
-![example workflow](https://github.com/Ectras/mpi_test/actions/workflows/test.yml/badge.svg)
+![example workflow](https://github.com/Ectras/mpi-test/actions/workflows/test.yml/badge.svg)
 
-# mpi_test
+# mpi-test
 
 Provides MPI testing capabilities to Rust. The `mpi_test` proc macro can be used to annotate functions to be tested with MPI, replacing the usual `#[test]`. As an argument, the number of processes to spawn needs to be given.
 
