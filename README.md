@@ -1,4 +1,5 @@
-![example workflow](https://github.com/Ectras/mpi-test/actions/workflows/test.yml/badge.svg)
+![tests](https://github.com/Ectras/mpi-test/actions/workflows/test.yml/badge.svg)
+[![docs](https://github.com/Ectras/mpi-test/actions/workflows/docs.yml/badge.svg)](https://ectras.github.io/mpi-test/mpi_test/)
 
 # mpi-test
 
