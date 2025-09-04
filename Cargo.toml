@@ -8,7 +8,7 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/Ectras/mpi_test"
 keywords = ["mpi", "testing"]
 categories = ["development-tools::testing"]
-rust-version = "1.60"
+rust-version = "1.61"
 
 [lib]
 proc-macro = true
