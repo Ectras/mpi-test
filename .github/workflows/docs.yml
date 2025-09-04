@@ -13,7 +13,6 @@ name: docs
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: build
     steps:
       - uses: actions/checkout@v5
         with:
@@ -29,16 +28,26 @@ jobs:
         id: deployment
         with:
           path: target/doc
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    needs: build
+    steps:
+      - name: Delete previous deployments
+        uses: strumwolf/delete-deployment-environment@a4825dd9648c57da8437a4885c3fcad58beac69c # tag=v3.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment: github-pages
+          onlyRemoveDeployments: true
   deploy:
     runs-on: ubuntu-latest
-    name: deploy
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     permissions:
       pages: write
       id-token: write
-    needs: build
+    needs: cleanup
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
