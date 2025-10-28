@@ -220,9 +220,9 @@ checksum = "68354c5c6bd36d73ff3feceb05efa59b6acb7626617f4962be322a825e61f79a"
 
 [[package]]
 name = "mpi"
-version = "0.7.0"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "feff046b021e89291acbb509336cd0a9fec3c0ccb54d996401bcb35b8bbf267a"
+checksum = "677762a4bde2c81158fc566a69b97d11b0c3358694e64f4f922ac5189be311cc"
 dependencies = [
  "build-probe-mpi",
  "conv",
