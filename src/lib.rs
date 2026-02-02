@@ -20,6 +20,8 @@ pub fn mpi_test(attr: TokenStream, item: TokenStream) -> TokenStream {
     quote! {
         #[test]
         fn #fn_wrapper_name() {
+            let current_exe = std::env::current_exe().expect("failed to get current exe path");
+
             let module_path = module_path!();
             let test_name = stringify!(#fn_internal_name);
 
@@ -37,12 +39,10 @@ pub fn mpi_test(attr: TokenStream, item: TokenStream) -> TokenStream {
             command
                 .arg("-n")
                 .arg(stringify!(#processes))
-                .arg("cargo")
-                .arg("test")
-                .arg(full_name)
-                .arg("--")
+                .arg(current_exe)
                 .arg("--ignored")
-                .arg("--exact");
+                .arg("--exact")
+                .arg(full_name);
 
             let output = command.output().expect("failed to execute command");
             assert!(output.status.success(), "{:?} returned {}\n==== mpiexec stdout: ====\n{}\n==== mpiexec stderr: ====\n{}\n========================", command, output.status, String::from_utf8(output.stdout).unwrap(), String::from_utf8(output.stderr).unwrap());
